@@ -139,13 +139,25 @@ class Pinax_Store {
 		if ( ! is_array( $d ) ) {
 			return null;
 		}
-		// Τα αρχικά δεδομένα του αρχείου αποθηκεύονται συμπιεσμένα.
 		if ( isset( $d['packed'] ) ) {
-			$raw = base64_decode( $d['packed'], true );
-			$raw = ( false !== $raw && function_exists( 'gzuncompress' ) ) ? @gzuncompress( $raw ) : false; // phpcs:ignore WordPress.PHP.NoSilencedErrors
-			$sh  = false !== $raw ? @unserialize( $raw, array( 'allowed_classes' => false ) ) : false; // phpcs:ignore WordPress.PHP.NoSilencedErrors, WordPress.PHP.DiscouragedPHPFunctions
-			$d['sheets'] = is_array( $sh ) ? $sh : array();
-			unset( $d['packed'] );
+			// Προεπισκόπηση από έκδοση πριν την 1.4.1 (άλλη μορφή): αγνοείται, ο χρήστης ξαναανεβάζει το αρχείο.
+			self::delete_draft( $id );
+			return null;
+		}
+		// Τα αρχικά δεδομένα του αρχείου αποθηκεύονται συμπιεσμένα (JSON → gzip → δεκαεξαδικό κείμενο).
+		if ( isset( $d['zhex'] ) ) {
+			$sheets = null;
+			$hex    = is_string( $d['zhex'] ) ? $d['zhex'] : '';
+			$valid  = '' !== $hex && 0 === strlen( $hex ) % 2 && strlen( $hex ) === strspn( $hex, '0123456789abcdef' );
+			$bin    = $valid ? hex2bin( $hex ) : false;
+			if ( false !== $bin && function_exists( 'gzuncompress' ) ) {
+				$json = @gzuncompress( $bin, 64 * MB_IN_BYTES ); // phpcs:ignore WordPress.PHP.NoSilencedErrors -- Χαλασμένα δεδομένα: απλώς δεν υπάρχει προεπισκόπηση.
+				if ( false !== $json ) {
+					$sheets = json_decode( $json, true );
+				}
+			}
+			$d['sheets'] = is_array( $sheets ) ? $sheets : array();
+			unset( $d['zhex'] );
 		}
 		return $d;
 	}
@@ -155,8 +167,12 @@ class Pinax_Store {
 	 */
 	public static function save_draft( $id, $draft ) {
 		if ( function_exists( 'gzcompress' ) && isset( $draft['sheets'] ) ) {
-			$draft['packed'] = base64_encode( gzcompress( serialize( $draft['sheets'] ), 6 ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions
-			unset( $draft['sheets'] );
+			$json = wp_json_encode( $draft['sheets'] );
+			$zip  = false !== $json ? gzcompress( $json, 6 ) : false;
+			if ( false !== $zip ) {
+				$draft['zhex'] = bin2hex( $zip );
+				unset( $draft['sheets'] );
+			}
 		}
 		$draft['_t'] = wp_generate_password( 12, false );
 		return self::write( 'pinax_draft_' . $id, $draft );

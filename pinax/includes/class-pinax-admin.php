@@ -556,6 +556,9 @@ class Pinax_Admin {
 		if ( ! $draft ) {
 			self::fail( $id, 'Δεν υπάρχει προεπισκόπηση. Ανεβάστε ξανά το αρχείο.' );
 		}
+		if ( empty( $draft['sheets'] ) || ! is_array( $draft['sheets'] ) ) {
+			self::fail( $id, 'Τα δεδομένα της προεπισκόπησης δεν διαβάζονται. Ανεβάστε ξανά το αρχείο.' );
+		}
 		// phpcs:disable WordPress.Security.NonceVerification
 		$sheet  = isset( $_POST['sheet'] ) ? (int) $_POST['sheet'] : (int) $draft['sheet'];
 		$header = isset( $_POST['header'] ) ? sanitize_key( wp_unslash( $_POST['header'] ) ) : 'auto';
