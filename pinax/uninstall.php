@@ -16,3 +16,4 @@ if ( is_array( $pinax_index ) ) {
 }
 delete_option( 'pinax_index' );
 delete_option( 'pinax_global' );
+delete_site_transient( 'pinax_latest_release' );
