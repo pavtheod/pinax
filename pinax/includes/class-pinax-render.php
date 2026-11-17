@@ -86,6 +86,9 @@ class Pinax_Render {
 		$max_w = self::max_width( $data, $mode );
 		if ( $max_w > 0 ) {
 			$style .= sprintf( ';--px-maxw:%dpx', $max_w );
+			if ( isset( $s['align'] ) && in_array( $s['align'], array( 'center', 'right' ), true ) ) {
+				$classes .= ' px-align-' . $s['align']; // Μετακινεί τον πίνακα (όχι τον τίτλο) όταν είναι στενότερος από τη στήλη.
+			}
 		}
 
 		ob_start();

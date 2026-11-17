@@ -181,6 +181,15 @@
 .px-page .px-note,
 .px-page .px-footer { max-width: var(--px-maxw, none); }
 
+.px-page.px-align-center .px-toolbar,
+.px-page.px-align-center .px-scroll,
+.px-page.px-align-center .px-note,
+.px-page.px-align-center .px-footer { margin-left: auto; margin-right: auto; }
+.px-page.px-align-right .px-toolbar,
+.px-page.px-align-right .px-scroll,
+.px-page.px-align-right .px-note,
+.px-page.px-align-right .px-footer { margin-left: auto; margin-right: 0; }
+
 /* Σημείωση */
 .px-page .px-note {
 	display: flex;

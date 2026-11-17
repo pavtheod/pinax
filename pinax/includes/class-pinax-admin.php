@@ -379,7 +379,25 @@ class Pinax_Admin {
 								}
 								?>
 							</select>
-							<p class="description">«Αυτόματο»: οι μικροί πίνακες (π.χ. ένα ωράριο) δεν απλώνονται σε όλη τη σελίδα. Στο Word χρησιμοποιείται το πλάτος που έχει ο πίνακας στο αρχείο. Ο πίνακας στοιχίζεται αριστερά. Το «Φαρδύτερο» δουλεύει στα θέματα που υποστηρίζουν «φαρδιά στοίχιση».</p>
+							<p class="description">«Αυτόματο»: οι μικροί πίνακες (π.χ. ένα ωράριο) δεν απλώνονται σε όλη τη σελίδα. Στο Word χρησιμοποιείται το πλάτος που έχει ο πίνακας στο αρχείο. Το «Φαρδύτερο» δουλεύει στα θέματα που υποστηρίζουν «φαρδιά στοίχιση».</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="pinax_align">Στοίχιση πίνακα</label></th>
+						<td>
+							<select id="pinax_align" name="align">
+								<?php
+								$align_options = array(
+									'left'   => 'Αριστερά',
+									'center' => 'Κέντρο',
+									'right'  => 'Δεξιά',
+								);
+								foreach ( $align_options as $value => $label ) {
+									printf( '<option value="%s"%s>%s</option>', esc_attr( $value ), selected( $s['align'], $value, false ), esc_html( $label ) );
+								}
+								?>
+							</select>
+							<p class="description">Ισχύει όταν ο πίνακας είναι στενότερος από τη στήλη της σελίδας. Μετακινεί τον πίνακα μαζί με το πεδίο αναζήτησης, τη σημείωση και το κουμπί εκτύπωσης. Ο τίτλος μένει αριστερά.</p>
 						</td>
 					</tr>
 				</table>
@@ -605,6 +623,7 @@ class Pinax_Admin {
 			'print'    => empty( $_POST['print'] ) ? 0 : 1,
 			'updated'  => empty( $_POST['updated'] ) ? 0 : 1,
 			'width'    => ( isset( $_POST['width'] ) && in_array( wp_unslash( $_POST['width'] ), array( 'auto', 'narrow', 'medium', 'full', 'wider' ), true ) ) ? sanitize_key( wp_unslash( $_POST['width'] ) ) : 'auto',
+			'align'    => ( isset( $_POST['align'] ) && in_array( wp_unslash( $_POST['align'] ), array( 'left', 'center', 'right' ), true ) ) ? sanitize_key( wp_unslash( $_POST['align'] ) ) : 'left',
 			'hide_title'    => empty( $_POST['hide_title'] ) ? 0 : 1,
 			'hide_subtitle' => empty( $_POST['hide_subtitle'] ) ? 0 : 1,
 		);

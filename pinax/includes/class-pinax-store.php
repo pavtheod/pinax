@@ -34,6 +34,7 @@ class Pinax_Store {
 			'print'    => 1,
 			'updated'  => 1,
 			'width'    => 'auto', // auto | narrow | medium | full | wider
+			'align'    => 'left', // left | center | right (όταν ο πίνακας είναι στενότερος από τη στήλη)
 			'hide_title'    => 0,
 			'hide_subtitle' => 0,
 		);
