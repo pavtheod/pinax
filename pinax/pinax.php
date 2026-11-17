@@ -3,7 +3,7 @@
  * Plugin Name:       Pinax: Πίνακες από Excel & Word
  * Description:       Ανεβάζετε έναν πίνακα από Excel ή Word και εμφανίζεται στο site με καθαρό και ενιαίο στυλ, μαζί με δυνατότητα αναζήτησης και εκτύπωσης. Κάθε πίνακας διαθέτει το δικό του shortcode, το οποίο μπορείτε να τοποθετήσετε σε οποιαδήποτε σελίδα θέλετε.
  * Plugin URI:        https://github.com/pavtheod/pinax
- * Version:           1.2.0
+ * Version:           1.3.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Pavlos Theodorou
@@ -25,7 +25,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PINAX_VERSION', '1.2.0' );
+define( 'PINAX_VERSION', '1.3.0' );
 define( 'PINAX_FILE', __FILE__ );
 define( 'PINAX_URL', plugin_dir_url( __FILE__ ) );
 define( 'PINAX_DIR', plugin_dir_path( __FILE__ ) );

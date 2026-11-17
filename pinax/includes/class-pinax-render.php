@@ -72,8 +72,9 @@ class Pinax_Render {
 		$search  = ! empty( $s['search'] ) && count( $rows ) > self::SEARCH_MIN_ROWS && ! $opt['printing'];
 		$cols    = $data['cols'];
 
+		$mode    = isset( $s['width'] ) ? $s['width'] : 'auto';
 		$classes = 'px-page';
-		if ( ! empty( $s['wide'] ) && ! $opt['preview'] ) {
+		if ( 'wider' === $mode && ! $opt['preview'] ) {
 			$classes .= ' alignwide';
 		}
 		if ( count( $rows ) > 20 ) {
@@ -82,6 +83,10 @@ class Pinax_Render {
 		// Στο κινητό: οι πίνακες με πολλές στήλες σύρονται πλάγια, οι μικροί χωράνε κανονικά.
 		$min_w = $ncols >= 5 ? $ncols * 105 : 0;
 		$style = sprintf( '--px-head:%s;--px-minw:%dpx', $head_bg, $min_w );
+		$max_w = self::max_width( $data, $mode );
+		if ( $max_w > 0 ) {
+			$style .= sprintf( ';--px-maxw:%dpx', $max_w );
+		}
 
 		ob_start();
 		?>
@@ -177,6 +182,53 @@ class Pinax_Render {
 	}
 
 	/** Ένα κελί (th/td) με τάξεις και χρώματα. */
+	/**
+	 * Μέγιστο πλάτος του πίνακα σε px (0 = όλο το πλάτος της στήλης της σελίδας).
+	 *
+	 * «Αυτόματο»: το πλάτος που έχει ο πίνακας στο Word, αν υπάρχει, και τουλάχιστον όσο
+	 * χρειάζεται το περιεχόμενο. Πίνακες που βγαίνουν φαρδιοί μένουν σε πλήρες πλάτος.
+	 *
+	 * @param array  $data Ανάλυση (Pinax_Analyzer).
+	 * @param string $mode auto | narrow | medium | full | wider.
+	 * @return int
+	 */
+	public static function max_width( $data, $mode ) {
+		switch ( $mode ) {
+			case 'narrow':
+				return 520;
+			case 'medium':
+				return 780;
+			case 'full':
+			case 'wider':
+				return 0;
+		}
+		$w = max( (int) ( isset( $data['src_w'] ) ? $data['src_w'] : 0 ), self::estimate_width( $data ) );
+		$w = max( 360, $w );
+		return $w >= 900 ? 0 : $w;
+	}
+
+	/** Πλάτος που χρειάζεται το περιεχόμενο: το μακρύτερο κείμενο κάθε στήλης (μέχρι 32 χαρακτήρες). */
+	private static function estimate_width( $data ) {
+		$ncols = max( 1, (int) $data['ncols'] );
+		$max   = array_fill( 0, $ncols, 0 );
+		$lines = array_merge( empty( $data['head'] ) ? array() : array( $data['head'] ), $data['rows'] );
+		foreach ( $lines as $cells ) {
+			$i = 0;
+			foreach ( $cells as $cell ) {
+				$span = ! empty( $cell['cs'] ) ? (int) $cell['cs'] : 1;
+				if ( 1 === $span && $i < $ncols ) {
+					$max[ $i ] = max( $max[ $i ], min( 32, mb_strlen( trim( (string) $cell['v'] ) ) ) );
+				}
+				$i += $span;
+			}
+		}
+		$total = 0;
+		foreach ( $max as $chars ) {
+			$total += max( 4, $chars ) * 10 + 36;
+		}
+		return $total;
+	}
+
 	private static function cell( $tag, $cell, $cols, $is_head ) {
 		$attrs = '';
 		$class = array();

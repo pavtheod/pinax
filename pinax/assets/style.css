@@ -175,6 +175,12 @@
 }
 .px-page table.px-table tr[hidden] { display: none; }
 
+/* Πλάτος πίνακα: ο τίτλος μένει σε όλο το πλάτος, τα υπόλοιπα στενεύουν μαζί με τον πίνακα (αριστερά). */
+.px-page .px-toolbar,
+.px-page .px-scroll,
+.px-page .px-note,
+.px-page .px-footer { max-width: var(--px-maxw, none); }
+
 /* Σημείωση */
 .px-page .px-note {
 	display: flex;
@@ -289,6 +295,10 @@ body.px-print-view.px-embed { padding: 0; }
 	.px-page .px-toolbar,
 	.px-page .px-print { display: none !important; }
 	.px-page .px-scroll { overflow: visible; box-shadow: none; border-radius: 0; }
+	.px-page .px-toolbar,
+	.px-page .px-scroll,
+	.px-page .px-note,
+	.px-page .px-footer { max-width: none; }
 	.px-page table.px-table { min-width: 0 !important; font-size: 11pt; }
 	.px-page table.px-table th,
 	.px-page table.px-table td { border-radius: 0 !important; }

@@ -233,7 +233,22 @@ class Pinax_Docx {
 		return array(
 			'grid'   => $grid,
 			'merges' => $merges,
+			'width'  => self::table_width( $tbl ),
 		);
+	}
+
+	/**
+	 * Το πλάτος που έχει ο πίνακας στο Word, σε εικονοστοιχεία (0 όταν δεν ορίζεται ρητά,
+	 * π.χ. «αυτόματο» ή ποσοστό). 1 dxa = 1/1440 της ίντσας, άρα px = dxa / 15.
+	 */
+	private static function table_width( $tbl ) {
+		$pr = self::kid( $tbl, 'tblPr' );
+		$w  = $pr ? self::kid( $pr, 'tblW' ) : null;
+		if ( ! $w || 'dxa' !== self::attr( $w, 'type' ) ) {
+			return 0;
+		}
+		$px = (int) round( (int) self::attr( $w, 'w' ) / 15 );
+		return ( $px >= 100 && $px <= 4000 ) ? $px : 0;
 	}
 
 	private static function close_vmerge( &$v_open, &$merges, $col, $current_row ) {

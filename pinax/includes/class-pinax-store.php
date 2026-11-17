@@ -33,7 +33,7 @@ class Pinax_Store {
 			'search'   => 1,
 			'print'    => 1,
 			'updated'  => 1,
-			'wide'     => 0,
+			'width'    => 'auto', // auto | narrow | medium | full | wider
 			'hide_title'    => 0,
 			'hide_subtitle' => 0,
 		);
@@ -57,7 +57,11 @@ class Pinax_Store {
 				'updated'  => 0,
 			)
 		);
-		$t['settings'] = wp_parse_args( (array) $t['settings'], self::default_settings() );
+		$settings = (array) $t['settings'];
+		if ( ! isset( $settings['width'] ) && ! empty( $settings['wide'] ) ) {
+			$settings['width'] = 'wider'; // Από την έκδοση 1.2: το παλιό «Φαρδύτερος πίνακας».
+		}
+		$t['settings'] = wp_parse_args( $settings, self::default_settings() );
 		$t['id']       = $id;
 		return $t;
 	}

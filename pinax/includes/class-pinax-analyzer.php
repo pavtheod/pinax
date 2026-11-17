@@ -348,6 +348,7 @@ class Pinax_Analyzer {
 			'header_row' => $header,
 			'auto_row'   => $first_multi,
 			'candidates' => $candidates,
+			'src_w'      => isset( $sheet['width'] ) ? (int) $sheet['width'] : 0,
 		);
 	}
 

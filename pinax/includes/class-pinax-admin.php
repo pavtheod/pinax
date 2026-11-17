@@ -359,9 +359,27 @@ class Pinax_Admin {
 						<td>
 							<label><input type="checkbox" name="search" value="1" <?php checked( ! empty( $s['search'] ) ); ?>> Πεδίο αναζήτησης <span class="px-muted">(εμφανίζεται μόνο όταν ο πίνακας έχει πάνω από <?php echo (int) Pinax_Render::SEARCH_MIN_ROWS; ?> γραμμές)</span></label><br>
 							<label><input type="checkbox" name="print" value="1" <?php checked( ! empty( $s['print'] ) ); ?>> Κουμπί «Εκτύπωση / Αποθήκευση PDF»</label><br>
-							<label><input type="checkbox" name="updated" value="1" <?php checked( ! empty( $s['updated'] ) ); ?>> «Τελευταία ενημέρωση: …»</label><br>
-							<label><input type="checkbox" name="wide" value="1" <?php checked( ! empty( $s['wide'] ) ); ?>> Φαρδύτερος πίνακας</label>
-							<p class="description">Αν ο πίνακας φαίνεται στριμωγμένος στον υπολογιστή, δοκιμάστε το «Φαρδύτερος πίνακας». Δουλεύει στα θέματα που υποστηρίζουν «φαρδιά στοίχιση».</p>
+							<label><input type="checkbox" name="updated" value="1" <?php checked( ! empty( $s['updated'] ) ); ?>> «Τελευταία ενημέρωση: …»</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="pinax_width">Πλάτος πίνακα</label></th>
+						<td>
+							<select id="pinax_width" name="width">
+								<?php
+								$width_options = array(
+									'auto'   => 'Αυτόματο (προτείνεται)',
+									'narrow' => 'Στενό',
+									'medium' => 'Μεσαίο',
+									'full'   => 'Πλήρες πλάτος',
+									'wider'  => 'Φαρδύτερο από τη στήλη της σελίδας',
+								);
+								foreach ( $width_options as $value => $label ) {
+									printf( '<option value="%s"%s>%s</option>', esc_attr( $value ), selected( $s['width'], $value, false ), esc_html( $label ) );
+								}
+								?>
+							</select>
+							<p class="description">«Αυτόματο»: οι μικροί πίνακες (π.χ. ένα ωράριο) δεν απλώνονται σε όλη τη σελίδα. Στο Word χρησιμοποιείται το πλάτος που έχει ο πίνακας στο αρχείο. Ο πίνακας στοιχίζεται αριστερά. Το «Φαρδύτερο» δουλεύει στα θέματα που υποστηρίζουν «φαρδιά στοίχιση».</p>
 						</td>
 					</tr>
 				</table>
@@ -586,7 +604,7 @@ class Pinax_Admin {
 			'search'   => empty( $_POST['search'] ) ? 0 : 1,
 			'print'    => empty( $_POST['print'] ) ? 0 : 1,
 			'updated'  => empty( $_POST['updated'] ) ? 0 : 1,
-			'wide'     => empty( $_POST['wide'] ) ? 0 : 1,
+			'width'    => ( isset( $_POST['width'] ) && in_array( wp_unslash( $_POST['width'] ), array( 'auto', 'narrow', 'medium', 'full', 'wider' ), true ) ) ? sanitize_key( wp_unslash( $_POST['width'] ) ) : 'auto',
 			'hide_title'    => empty( $_POST['hide_title'] ) ? 0 : 1,
 			'hide_subtitle' => empty( $_POST['hide_subtitle'] ) ? 0 : 1,
 		);
