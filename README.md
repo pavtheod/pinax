@@ -70,29 +70,8 @@ Plugin για WordPress που δείχνει στο site οποιονδήποτ
 
 Ιδέες και προβλήματα: ανοίξτε ένα [Issue](../../issues).
 
-## Για όσους θέλουν να το αλλάξουν
-
-```
-pinax/                          Ο φάκελος του plugin (αυτός εγκαθίσταται στο WordPress)
-  pinax.php                       Κύριο αρχείο (σταθερές, φόρτωση)
-  uninstall.php                   Καθαρισμός δεδομένων κατά τη διαγραφή
-  includes/
-    class-pinax-reader.php          Κοινά: ασφαλές άνοιγμα zip/XML, καθαρισμός κειμένου
-    class-pinax-xlsx.php            Ανάγνωση Excel (τιμές, μορφές αριθμών, χρώματα, συγχωνεύσεις)
-    class-pinax-docx.php            Ανάγνωση πινάκων Word
-    class-pinax-csv.php             Ανάγνωση CSV (UTF-8 / Windows-1253)
-    class-pinax-analyzer.php        Τίτλος, επικεφαλίδα, γραμμές, στοίχιση, χρώματα στηλών
-    class-pinax-color.php           Μετατροπή χρωμάτων σε απαλές αποχρώσεις
-    class-pinax-store.php           Αποθήκευση πινάκων (WordPress options)
-    class-pinax-render.php          Shortcode [pinakas], HTML, σελίδα εκτύπωσης
-    class-pinax-admin.php           Οθόνες διαχείρισης και ενέργειες
-  assets/                         CSS / JS
-```
-
-**Νέα έκδοση (για όποιον συντηρεί το plugin):** αλλάξτε τον αριθμό έκδοσης σε δύο σημεία του `pinax/pinax.php` (στην επικεφαλίδα και στο `PINAX_VERSION`), κάντε zip τον φάκελο `pinax` και επισυνάψτε το ως `pinax.zip` σε ένα νέο release, γράφοντας στην περιγραφή του τι άλλαξε.
-
-Τα δεδομένα αποθηκεύονται ως options: `pinax_index`, `pinax_table_{id}`, `pinax_draft_{id}`, `pinax_global`. Όταν διαγράφετε το plugin από τη Διαχείριση, διαγράφονται κι αυτά.
-
 ## Άδεια
 
 [GPL-2.0-or-later](LICENSE). Μπορείτε να το χρησιμοποιήσετε, να το αλλάξετε και να το μοιραστείτε ελεύθερα, αρκεί να μείνει κι αυτό ανοιχτό.
+
+Το πρόσθετο παρέχεται «ως έχει», χωρίς εγγύηση και χωρίς υποχρέωση παροχής τεχνικής υποστήριξης.
