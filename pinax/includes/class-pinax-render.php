@@ -82,7 +82,8 @@ class Pinax_Render {
 		}
 		// Στο κινητό: οι πίνακες με πολλές στήλες σύρονται πλάγια, οι μικροί χωράνε κανονικά.
 		$min_w = $ncols >= 5 ? $ncols * 105 : 0;
-		$style = sprintf( '--px-head:%s;--px-minw:%dpx', $head_bg, $min_w );
+		$stripe = ! empty( $g['stripe_off'] ) ? 'transparent' : Pinax_Color::light( $g['stripe'] );
+		$style  = sprintf( '--px-head:%s;--px-stripe:%s;--px-minw:%dpx', $head_bg, $stripe, $min_w );
 		$max_w = self::max_width( $data, $mode );
 		if ( $max_w > 0 ) {
 			$style .= sprintf( ';--px-maxw:%dpx', $max_w );

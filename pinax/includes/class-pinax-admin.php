@@ -178,13 +178,23 @@ class Pinax_Admin {
 
 		<div class="px-card">
 			<h2>Γενικές ρυθμίσεις</h2>
-			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="px-inline-form">
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<?php wp_nonce_field( 'pinax_global' ); ?>
 				<input type="hidden" name="action" value="pinax_global">
-				<label for="pinax_head">Χρώμα επικεφαλίδας όλων των πινάκων:</label>
-				<input type="color" id="pinax_head" name="head" value="<?php echo esc_attr( Pinax_Color::sanitize( $g['head'], Pinax_Store::DEFAULT_HEAD ) ); ?>">
-				<button type="submit" class="button">Αποθήκευση</button>
-				<button type="submit" name="reset" value="1" class="button-link">Επαναφορά</button>
+				<div class="px-inline-form">
+					<label for="pinax_head">Χρώμα επικεφαλίδας όλων των πινάκων:</label>
+					<input type="color" id="pinax_head" name="head" value="<?php echo esc_attr( Pinax_Color::sanitize( $g['head'], Pinax_Store::DEFAULT_HEAD ) ); ?>">
+				</div>
+				<div class="px-inline-form">
+					<label for="pinax_stripe">Χρώμα σκίασης γραμμών:</label>
+					<input type="color" id="pinax_stripe" name="stripe" value="<?php echo esc_attr( Pinax_Color::light( $g['stripe'] ) ); ?>">
+					<label><input type="checkbox" name="stripe_off" value="1" <?php checked( ! empty( $g['stripe_off'] ) ); ?>> Χωρίς σκίαση</label>
+				</div>
+				<p class="description">Η σκίαση μπαίνει σε κάθε δεύτερη γραμμή και μόνο στα κελιά χωρίς δικό τους χρώμα από το Excel/Word. Τα σκούρα χρώματα γίνονται αυτόματα πιο απαλά, ώστε να διαβάζεται το κείμενο.</p>
+				<p>
+					<button type="submit" class="button">Αποθήκευση</button>
+					<button type="submit" name="reset" value="1" class="button-link">Επαναφορά</button>
+				</p>
 			</form>
 		</div>
 		<?php
@@ -646,9 +656,23 @@ class Pinax_Admin {
 	public static function handle_global() {
 		self::guard( 'pinax_global', false );
 		// phpcs:disable WordPress.Security.NonceVerification
-		$head = ! empty( $_POST['reset'] ) ? Pinax_Store::DEFAULT_HEAD : ( isset( $_POST['head'] ) ? sanitize_hex_color( wp_unslash( $_POST['head'] ) ) : '' );
+		if ( ! empty( $_POST['reset'] ) ) {
+			$global = array(
+				'head'       => Pinax_Store::DEFAULT_HEAD,
+				'stripe'     => Pinax_Store::DEFAULT_STRIPE,
+				'stripe_off' => 0,
+			);
+		} else {
+			$head   = isset( $_POST['head'] ) ? sanitize_hex_color( wp_unslash( $_POST['head'] ) ) : '';
+			$stripe = isset( $_POST['stripe'] ) ? sanitize_hex_color( wp_unslash( $_POST['stripe'] ) ) : '';
+			$global = array(
+				'head'       => $head ? $head : Pinax_Store::DEFAULT_HEAD,
+				'stripe'     => Pinax_Color::light( $stripe ? $stripe : Pinax_Store::DEFAULT_STRIPE ),
+				'stripe_off' => empty( $_POST['stripe_off'] ) ? 0 : 1,
+			);
+		}
 		// phpcs:enable
-		update_option( 'pinax_global', array( 'head' => $head ? $head : Pinax_Store::DEFAULT_HEAD ) );
+		update_option( 'pinax_global', $global );
 		self::back( '', 'saved' );
 	}
 }

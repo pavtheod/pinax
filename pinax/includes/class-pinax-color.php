@@ -88,6 +88,25 @@ class Pinax_Color {
 		);
 	}
 
+	/**
+	 * Χρώμα για φόντο κάτω από κείμενο: αν είναι σκούρο, γίνεται απαλό (ίδια απόχρωση),
+	 * ώστε το κείμενο να διαβάζεται πάντα. Τα ήδη ανοιχτά χρώματα μένουν ίδια.
+	 *
+	 * @param string $c #rrggbb.
+	 * @return string #rrggbb (πεζά).
+	 */
+	public static function light( $c ) {
+		$c = sanitize_hex_color( $c );
+		if ( ! $c ) {
+			return Pinax_Store::DEFAULT_STRIPE;
+		}
+		list( $h, $l, $s ) = self::to_hls( substr( $c, 1 ) );
+		if ( $l >= 0.9 ) {
+			return strtolower( $c );
+		}
+		return '#' . strtolower( self::from_hls( $h, 0.94, min( 0.6, $s ) ) );
+	}
+
 	/** Επικυρώνει χρώμα της μορφής #rrggbb. */
 	public static function sanitize( $c, $fallback ) {
 		$c = sanitize_hex_color( $c );

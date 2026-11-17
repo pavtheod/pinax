@@ -5,7 +5,7 @@
  *   pinax_index         => array( id => όνομα )
  *   pinax_table_{id}    => array( name, settings, data, source, updated )
  *   pinax_draft_{id}    => προεπισκόπηση που δεν έχει δημοσιευτεί
- *   pinax_global        => γενικές ρυθμίσεις (χρώμα επικεφαλίδας)
+ *   pinax_global        => γενικές ρυθμίσεις (χρώμα επικεφαλίδας, σκίαση γραμμών)
  *
  * @package Pinax
  */
@@ -14,7 +14,8 @@ defined( 'ABSPATH' ) || exit;
 
 class Pinax_Store {
 
-	const DEFAULT_HEAD = '#285d87';
+	const DEFAULT_HEAD   = '#285d87';
+	const DEFAULT_STRIPE = '#f7f9fb';
 
 	public static function index() {
 		$idx = get_option( 'pinax_index', array() );
@@ -184,7 +185,14 @@ class Pinax_Store {
 
 	public static function global_settings() {
 		$g = get_option( 'pinax_global', array() );
-		return wp_parse_args( is_array( $g ) ? $g : array(), array( 'head' => self::DEFAULT_HEAD ) );
+		return wp_parse_args(
+			is_array( $g ) ? $g : array(),
+			array(
+				'head'       => self::DEFAULT_HEAD,
+				'stripe'     => self::DEFAULT_STRIPE,
+				'stripe_off' => 0,
+			)
+		);
 	}
 
 	/* ------------------------------------------------------------------ */

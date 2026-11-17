@@ -151,7 +151,7 @@
 	background-color: #fff;
 }
 .px-page table.px-table td:last-child { border-right: 0; }
-.px-page table.px-table tbody tr.px-even td:not(.px-fill) { background-color: #f7f9fb; }
+.px-page table.px-table tbody tr.px-even td:not(.px-fill) { background-color: var(--px-stripe, #f7f9fb); }
 .px-page table.px-table td.px-c { text-align: center; }
 .px-page table.px-table td.px-r { text-align: right; }
 .px-page table.px-table td.px-b { font-weight: 600; }
